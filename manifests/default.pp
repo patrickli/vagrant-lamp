@@ -8,7 +8,7 @@ define vhost (
   $server_aliases = '',
   $dbuser         = 'root',
   $dbpass         = $::pma_mysql_root_password,
-  $dbname         = regsubst($name, '\.', '_'),
+  $dbname         = regsubst($name, '\.', '_', 'G'),
   $priority       = '001',
 ) {
   validate_re($priority, '^\d{3}$', 'Priority must be a zero-padded 3 digit number.')
