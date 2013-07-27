@@ -22,10 +22,15 @@ define vhost (
     ],
     priority      => $priority,
   }
+  if $dbuser == 'root' {
+    $real_dbpass = $::pma_mysql_root_password
+  } else {
+    $real_dbpass = $dbpass
+  }
   mysql::db { $dbname:
     grant    => ['ALL'],
     user     => $dbuser,
-    password => $dbpass,
+    password => $real_dbpass,
     host     => 'localhost',
     charset  => 'utf8',
     require  => Class['mysql::server'],
