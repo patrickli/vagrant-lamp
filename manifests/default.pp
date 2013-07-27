@@ -28,12 +28,8 @@ define vhost (
     $real_dbpass = $dbpass
   }
   mysql::db { $dbname:
-    grant    => ['ALL'],
     user     => $dbuser,
     password => $real_dbpass,
-    host     => 'localhost',
-    charset  => 'utf8',
-    require  => Class['mysql::server'],
   }
 }
 
