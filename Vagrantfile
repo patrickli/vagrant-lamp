@@ -1,3 +1,5 @@
+Vagrant.require_plugin "vagrant-hostmanager"
+
 Vagrant.configure("2") do |config|
   config.vm.box = "precise32"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
@@ -14,6 +16,11 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.synced_folder "./", "/var/www", id: "vagrant-root"
+
+  # HostManager Config
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.aliases = ["phpmyadmin.#{config.vm.hostname}"]
 
   config.vm.provision :shell, :inline => 'echo "
 deb http://nz.archive.ubuntu.com/ubuntu/ precise          main restricted universe multiverse
