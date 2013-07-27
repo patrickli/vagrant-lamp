@@ -1,0 +1,1 @@
+vhost { 'awesome.dev': }
