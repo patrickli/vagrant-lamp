@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "precise32"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
-  config.vm.hostname = "satmed-php53.local"
+  config.vm.hostname = "vagrant-lamp.local"
 
   config.vm.network :private_network, ip: "172.23.42.10"
   config.ssh.forward_agent = true
