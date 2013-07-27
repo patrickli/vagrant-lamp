@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "satmed-php53.local"
 
   config.vm.network :private_network, ip: "172.23.42.10"
-    config.ssh.forward_agent = true
+  config.ssh.forward_agent = true
 
   config.vm.provider :virtualbox do |v|
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
