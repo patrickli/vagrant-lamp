@@ -72,7 +72,7 @@ package { [
 exec { 'autoremove':
   command     => 'apt-get autoremove --purge -y',
   refreshonly => true,
-  subscribe   => Class['apt'],
+  subscribe   => Apt::Conf['noextradeps'],
 }
 
 exec { 'mysql_cleanup':
