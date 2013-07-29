@@ -6,6 +6,7 @@ define vhost (
   $server_name    = $name,
   $docroot        = "/var/www/${name}",
   $server_aliases = '',
+  $env_variables  = '',
   $dbuser         = 'root',
   $dbpass         = $::pma_mysql_root_password,
   $dbname         = regsubst($name, '\.', '_', 'G'),
@@ -17,9 +18,7 @@ define vhost (
     serveraliases => $server_aliases,
     docroot       => $docroot,
     port          => '80',
-    env_variables => [
-      'SF_ENVIRONMENT dev'
-    ],
+    env_variables => $env_variables,
     priority      => $priority,
   }
   if $dbuser == 'root' {
