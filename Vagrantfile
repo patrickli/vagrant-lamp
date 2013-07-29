@@ -1,26 +1,44 @@
+require './lib/vm_config'
+
+vm_config = VmConfig.load 'config.yml'
+
 Vagrant.require_plugin "vagrant-hostmanager"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "precise32"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
-  config.vm.hostname = "vagrant-lamp.local"
+  config.vm.hostname = vm_config['vm']['hostname']
 
-  config.vm.network :private_network, ip: "172.23.42.10"
+  config.vm.network :private_network, ip: vm_config['vm']['ip']
   config.ssh.forward_agent = true
 
   config.vm.provider :virtualbox do |v|
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    v.customize ["modifyvm", :id, "--memory", 1024]
+    v.customize ["modifyvm", :id, "--memory", vm_config['vm']['memory']]
     v.customize ["modifyvm", :id, "--name", config.vm.hostname]
   end
-
-  config.vm.synced_folder "./", "/var/www", id: "vagrant-root"
 
   # HostManager Config
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
-  config.hostmanager.aliases = ["phpmyadmin.#{config.vm.hostname}"]
+  host_aliases = ["phpmyadmin.#{config.vm.hostname}"]
+
+  # vhost config
+  vhosts = {}
+  vm_config['vhosts'].each do |name, vhost|
+    if vhost['server_aliases'].is_a? Array then
+      host_aliases += vhost['server_aliases']
+    end
+    config.vm.synced_folder vhost['path'], vhost['vhost_root']
+    # Delete params unrecognized by puppet
+    vhost.delete 'path'
+    vhost.delete 'vhost_root'
+    vhost.delete 'root_dir'
+    vhosts[name] = vhost
+  end
+
+  config.hostmanager.aliases = host_aliases
 
   config.vm.provision :shell, :inline => 'echo "
 deb http://nz.archive.ubuntu.com/ubuntu/ precise          main restricted universe multiverse
@@ -36,5 +54,9 @@ controluser_password=awesome" > /etc/phpmyadmin.facts;'
     puppet.manifests_path = "manifests"
     puppet.module_path = "modules"
     puppet.options = ['--verbose']
+    puppet.facter = {
+      'git_config' => vm_config['git'].to_json,
+      'vhosts' => vhosts.to_json,
+    }
   end
 end

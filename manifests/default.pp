@@ -4,7 +4,7 @@ File { owner => 0, group => 0, mode => 0644 }
 
 define vhost (
   $server_name    = $name,
-  $docroot        = '/var/www/',
+  $docroot        = "/var/www/${name}",
   $server_aliases = '',
   $dbuser         = 'root',
   $dbpass         = $::pma_mysql_root_password,
@@ -197,4 +197,10 @@ apache::vhost { 'phpmyadmin':
   require     => Class['phpmyadmin'],
 }
 
-import 'vhosts.pp'
+if !empty($::git_config) {
+  create_resources(git_config, parsejson($::git_config))
+}
+
+if !empty($::vhosts) {
+  create_resources(vhost, parsejson($::vhosts))
+}
