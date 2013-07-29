@@ -33,6 +33,18 @@ define vhost (
   }
 }
 
+define git_config (
+  $value,
+) {
+  exec { "git config --system ${name} \"${value}\"":
+    require => Package['git'],
+  }
+}
+
+git_config { 'ui.color':
+  value => 'auto'
+}
+
 class { 'apt': }
 
 Class['::apt::update'] -> Package <|
