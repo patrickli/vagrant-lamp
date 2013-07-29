@@ -38,6 +38,7 @@ define git_config (
 ) {
   exec { "git config --system ${name} \"${value}\"":
     require => Package['git'],
+    unless  => "test \"\$(git config ${name})\" = \"${value}\"",
   }
 }
 
