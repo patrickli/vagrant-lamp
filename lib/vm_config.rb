@@ -6,7 +6,9 @@ class VmConfig
       'hostname' => 'vagrant-lamp.local',
       'memory' => 1024,
     },
-    'git' => {},
+    'git' => {
+      'ui.color' => 'auto',
+    },
     'vhosts' => {},
   }
 

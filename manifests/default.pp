@@ -42,10 +42,6 @@ define git_config (
   }
 }
 
-git_config { 'ui.color':
-  value => 'auto'
-}
-
 class { 'apt': }
 
 Class['::apt::update'] -> Package <|
