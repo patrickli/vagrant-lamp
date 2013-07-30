@@ -38,8 +38,8 @@ class VmConfig
       priority = 1
       vm_config['vhosts'].each_key do |i|
         raise "Path is required for a vhost." unless vm_config['vhosts'][i].key? "path"
-        raise "Server aliases must be an array." unless vm_config['vhosts'][i].key? 'server_aliases' and vm_config['vhosts'][i]['server_aliases'].is_a? Array
-        raise "Environment variables must be an array." unless vm_config['vhosts'][i].key? 'env_variables' and vm_config['vhosts'][i]['env_variables'].is_a? Array
+        raise "Server aliases must be an array." if vm_config['vhosts'][i].key? 'server_aliases' and !vm_config['vhosts'][i]['server_aliases'].is_a? Array
+        raise "Environment variables must be an array." if vm_config['vhosts'][i].key? 'env_variables' and !vm_config['vhosts'][i]['env_variables'].is_a? Array
 
         vm_config['vhosts'][i]['root_dir'] ||= ''
         vm_config['vhosts'][i]['priority'] ||= '%03d' % priority
