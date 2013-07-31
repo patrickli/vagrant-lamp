@@ -90,9 +90,31 @@ exec { 'mysql_cleanup':
   subscribe   => Class['mysql::server::account_security'],
 }
 
-package { 'nano':
+package { [
+    'nano',
+    'ubuntu-standard',
+    'hdparm',
+    'memtest86+',
+    'parted',
+    'libparted0debian1',
+    'pciutils',
+    'popularity-contest',
+    'apparmor',
+    'usbutils',
+    'friendly-recovery',
+    'ntfs-3g',
+    'plymouth-theme-ubuntu-text',
+    'ppp',
+    'pppconfig',
+    'pppoeconf',
+    'ufw',
+    'update-manager-core',
+    'ed',
+    'dmidecode',
+    'language-selector-common'
+  ]:
   ensure  => 'purged',
-}
+} -> Exec['autoremove']
 
 tidy { '/home/vagrant/postinstall.sh': }
 
