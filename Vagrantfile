@@ -58,6 +58,7 @@ controluser_password=awesome" > /etc/phpmyadmin.facts;'
     puppet.facter = {
       'git_config' => vm_config['git'].to_json,
       'vhosts' => vhosts.to_json,
+      'timezone' => vm_config['vm']['timezone'],
     }
   end
 end

@@ -5,6 +5,7 @@ class VmConfig
       'ip' => '172.23.42.10',
       'hostname' => 'vagrant-lamp.local',
       'memory' => 1024,
+      'timezone' => 'Pacific/Auckland',
     },
     'git' => {
       'ui.color' => 'auto',

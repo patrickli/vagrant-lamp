@@ -69,6 +69,7 @@ file { '/home/vagrant/.bash_aliases':
 }
 
 package { [
+    'tzdata',
     'vim',
     'curl',
     'git',
@@ -88,6 +89,11 @@ exec { 'mysql_cleanup':
   command     => "mysql -u root --password=\"${::pma_mysql_root_password}\" -e \"DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'\" mysql",
   refreshonly => true,
   subscribe   => Class['mysql::server::account_security'],
+}
+
+exec { 'set_timezone':
+  command => "echo '${::timezone}' > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata",
+  require => Package['tzdata'],
 }
 
 package { [
@@ -165,19 +171,11 @@ puphpet::ini { 'xdebug':
   require => Class['php'],
 }
 
-puphpet::ini { 'php':
-  value   => [
-    'date.timezone = "Pacific/Auckland"'
-  ],
-  ini     => '/etc/php5/conf.d/zzz_php.ini',
-  notify  => Service['apache'],
-  require => Class['php'],
-}
-
 puphpet::ini { 'custom':
   value   => [
     'display_errors = On',
-    'error_reporting = -1'
+    'error_reporting = -1',
+    "date.timezone = \"${::timezone}\""
   ],
   ini     => '/etc/php5/conf.d/zzz_custom.ini',
   notify  => Service['apache'],
