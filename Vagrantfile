@@ -39,6 +39,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.hostmanager.aliases = host_aliases
+  config.vm.provision :hostmanager
 
   config.vm.provision :shell, :inline => 'echo "
 deb http://nz.archive.ubuntu.com/ubuntu/ precise          main restricted universe multiverse
