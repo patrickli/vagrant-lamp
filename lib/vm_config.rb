@@ -8,7 +8,7 @@ class VmConfig
       'timezone' => 'Pacific/Auckland',
     },
     'git' => {
-      'ui.color' => 'auto',
+      'color.ui' => 'auto',
     },
     'vhosts' => {},
   }
