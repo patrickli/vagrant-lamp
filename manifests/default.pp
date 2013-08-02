@@ -93,6 +93,7 @@ exec { 'mysql_cleanup':
 
 exec { 'set_timezone':
   command => "echo '${::timezone}' > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata",
+  unless  => "test \"\$(cat /etc/timezone)\" = \"${::timezone}\"",
   require => Package['tzdata'],
 }
 
@@ -124,7 +125,32 @@ package { [
 
 tidy { '/home/vagrant/postinstall.sh': }
 
-class { 'apache': }
+class { 'apache':
+  process_user => 'vagrant',
+}
+
+class apache_runas {
+  $file = '/etc/apache2/envvars'
+  file_line { "${file}-user":
+    path    => $file,
+    line    => 'export APACHE_RUN_USER=vagrant',
+    match   => '^export APACHE_RUN_USER',
+  }
+  file_line { "${file}-group":
+    path    => $file,
+    line    => 'export APACHE_RUN_GROUP=vagrant',
+    match   => '^export APACHE_RUN_GROUP',
+  }
+  file { '/var/lock/apache2':
+    ensure  => 'directory',
+    owner   => 'vagrant',
+  }
+}
+
+class { 'apache_runas':
+  require => Package['apache'],
+  notify  => Service['apache'],
+}
 
 apache::dotconf { 'custom':
   content => 'EnableSendfile Off',
